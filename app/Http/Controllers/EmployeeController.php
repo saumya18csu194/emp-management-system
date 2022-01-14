@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Employee;
 use Validator;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\Hash;
+use Auth;
 class EmployeeController extends Controller
 {
    
@@ -16,15 +17,28 @@ class EmployeeController extends Controller
      * @return \Illuminate\Http\Response
      */
     
-    public function index()
+    public function index(Request $request)
     {
     
         
        
-        
-        $employees = Employee::latest()->paginate(5);
+        $s=Employee::count();
+        $search =  $request->input('q');
+        if($search!=""){
+            $employees= Employee::where(function ($query) use ($search){
+                $query->where('full_name', 'like', '%'.$search.'%');
+                   
+            })
+            ->paginate(2);
+            $employees->appends(['q' => $search]);
+        }
+        else{
+            $employees = Employee::paginate(2);
+        }
+        return view('employees.index',compact('employees','s'));
        
-        return view('employees.index',compact('employees'));
+       
+        
         
     }
 
@@ -110,5 +124,34 @@ class EmployeeController extends Controller
     {
         Employee::where('id', $id)->delete();
         return redirect()->intended('/employees');
+    }
+    public function showChangePasswordForm()
+    {
+        return view('auth.changePassword');
+    }
+    public function changePassword(Request $request){
+
+        if (!(Hash::check($request->get('current-password'), Auth::user()->password))) {
+            // The passwords matches
+            return redirect()->back()->with("error","Your current password does not matches with the password you provided. Please try again.");
+        }
+
+        if(strcmp($request->get('current-password'), $request->get('new-password')) == 0){
+            //Current password and new password are same
+            return redirect()->back()->with("error","New Password cannot be same as your current password. Please choose a different password.");
+        }
+
+        $validatedData = $this->validate($request, [
+            'current-password' => 'required',
+            'new-password' =>  'required|string|min:6|confirmed|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/'
+        ]);
+
+        //Change Password
+        $user = Auth::user();
+        $user->password = bcrypt($request->get('new-password'));
+        $user->save();
+
+        return redirect()->back()->with("success","Password changed successfully !");
+
     }
 }

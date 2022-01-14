@@ -15,12 +15,13 @@
                     @endif
                  
                     You are logged in!
+                    
                     <br>
                     <a href="{{ route('employees.create') }}">Add Employees</a>
                     <br>
                     <a href="{{ route('employees.index') }}">View All Employees</a>
                     <br>
-                    <a href="{{ route('employees.index') }}">Edit employee Detail</a>
+                    <a href="{{ route('employees.index') }}">Add Admin</a>
                     <br>
                     
                 </div>

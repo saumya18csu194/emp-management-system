@@ -22,8 +22,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('employees', 'EmployeeController');
+Route::resource('users', 'UserController');
 Route::delete('/employees/{id}', 'EmployeeController@destroy')->name('employees.destroy');
-
-  
-
-
+Route::get('/profile', 'ProfileController@profile')->name('profile');
+Route::patch('/profile', 'ProfileController@update_profile')->name('profile.update');
+Route::get('/admin/home', 'HomeController@index')->name('admin.home');
+Route::get('/changePassword','EmployeeController@showChangePasswordForm')->name('changePassword');
+Route::post('/changePassword','EmployeeController@changePassword')->name('changePassword');
