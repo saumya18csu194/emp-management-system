@@ -6,9 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
-    protected $fillable = ["full_name", "email", "age"];
-    public function scopeSearch($query,$s)
-    {
-        return $query->where('full_name','like','% .$s. %');
-    }
+    protected $fillable = ["emp_id","full_name", "email", "age","gender","phone_number","address","birth_date","joining_date"];
+
 }

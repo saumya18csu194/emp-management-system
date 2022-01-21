@@ -1,32 +1,38 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-
+<link rel="stylesheet" href="css\styles.css">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href='https://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
-  <link href="{{ asset('css/main.css') }}" rel="stylesheet" type="text/css" >
-
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    
-</head>
-<body style= "background-color: rgb(178, 211, 178);">
+  <style>
+     .center{
+      display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+     }
+     </style>
+<body style=" background-color: rgb(178, 211, 178);">
+
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="#">.. EMS  RTDS.. </a>
     </div>
     <ul class="nav navbar-nav">
-      <li class="active"><a href="../../newhomepage">Home</a></li>
+      <li class="active"><a href="#">Home</a></li>
 
-      <li><a href="#">About</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
     
-    <li><a href="{{ route('logout') }}"
+
+      <li><a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                             <span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
@@ -34,33 +40,29 @@
                                             {{ csrf_field() }}
                                         </form>
 </li>
-<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ Auth::user()->name }} <span class="caret"></span></a>
+      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ Auth::user()->name }} <span class="caret"></span></a>
         <ul class="dropdown-menu">
           <li><a href="#">View Profile</a></li>
           <li><a href="{{ route('changePassword') }}">Change Password</a></li>
-        </ul>
-      </li>
-                                         
+        
         </ul>
       </li>
     </ul>
   </div>
 </nav>
-<form method="Post" action="{{route('users.update',$user->id)}}">  
-<input name="_method" type="hidden" value="PATCH">
+<img src="uploads/bg.png" class="center">
+<div class="sidenav" style="background-color: black">
 
-        
-        <fieldset>
-          
-          <legend>Edit Admin Information</legend>
-        
-          <label for="name">Name:</label>
-          <input type="text" id="full_name" name="full_name" placeholder="Enter Full Name" value={{$user->name}}>
-        
-          <label for="email">Email:</label>
-          <input type="email" id="email" name="email" placeholder="Enter Valid Email Address" value={{$user->email}}>
+  <a href="{{ route('employees.create') }}">Add Employees</a>
+  <a href="{{ route('employees.index') }}">View All Employees</a>
+  <a href="{{ route('users.create') }}">Add Admins</a>
+  <a href="{{ route('users.index') }}">View All Admins</a>
+  
+</div>
 
 
-<button type="submit" class="btn-btn" >Update</button>  
-<input type="hidden" name="_token" value="{{ csrf_token() }}" />
-</form>
+
+
+   
+
+</html> 

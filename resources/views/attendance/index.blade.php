@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
-<head>
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ATTENDANCE EMPLOYEE</title>
+        <link rel="stylesheet" href="https://codepen.io/gymratpacks/pen/VKzBEp#0">
+        <link href='https://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-</head>
-<body>
-<nav class="navbar navbar-inverse">
+        <link href="{{ asset('css/main.css') }}" rel="stylesheet" type="text/css" >
+    </head>
+    <body>
+    <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="#">.. EMS  RTDS.. </a>
@@ -43,19 +46,7 @@
     </ul>
   </div>
 </nav>
-  <div class="container">
-  <div class="row justify-content-center">
-        <div class="col-md-10">
-            <form action="">
-            <h2>EMPLOYEE DATA</h2>
-                <div class="form-group">
-
-                    <input type="text" name="q" placeholder="Find using employee name...!" class="form-control"/>
-                    <input type="submit" class="btn btn-primary" value="Search"/>
-                </div>
-            </form>
-        </div>
-    <table class="table table-striped">
+<table class="table table-striped">
     <thead>
       <tr>
         <th>ID</th>
@@ -63,27 +54,22 @@
         <th>Email ID</th>
         <th>Age</th>
         <th>Address</th>
-        <th>Birth Date</th>
-        <th>Joining Date</th>
-      </tr>
     </thead>
     <tbody>
-    <p>TOTAL NUMBER OF EMPLOYEES = {{ $s }}</p>  
-      @foreach($employees as $emp)
+  
+      @foreach($result as $emp)
      
       <tr>
-        <td>{{$emp['emp_id']}}</td>
-        <td>{{$emp['full_name']}}</td>
-        <td>{{$emp['email']}}</td>
-        <td>{{$emp['age']}}</td>
-        <td>{{$emp['address']}}</td>
-        <td>{{$emp['birth_date']}}</td>
-        <td>{{$emp['joining_date']}}</td>
+        <td>{{$emp->emp_id}}</td>
+        <td>{{$emp->shift_date_from}}</td>
+        <td>{{$emp->shift_date_to}}</td>
+        <td>{{$emp->location}}</td>
+        <td>{{$emp->message}}</td>
+        
         <td>
-        <form class="row" method="POST" action="{{ route('employees.destroy', ['id' => $emp->id]) }}" onsubmit = "return confirm('Are you sure?')">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <a href="{{ route('employees.edit', ['id' => $emp->id]) }}" class="btn">
+        <form class="row" method="POST" action="{{ url('attendance')}}">
+                        
+                        <a href="{{ route('attendance.edit', ['attendance_id' => $emp->attendance_id]) }}" class="btn">
                         Update
                         </a>
                          <button type="submit">
@@ -99,5 +85,8 @@
       @endforeach
     </tbody>
   </table>
-  {{$employees->links()}}
-  </div>
+
+     
+     
+     
+

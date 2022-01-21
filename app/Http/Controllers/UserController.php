@@ -24,7 +24,7 @@ class UserController extends Controller
             $employees->appends(['q' => $search]);
         }
         else{
-            $employees = User::paginate(2);
+            $employees = User::where('role', '=', 'admin')->paginate(2);
         }
         return view('users.index',compact('employees','s'));
     }
@@ -58,7 +58,7 @@ class UserController extends Controller
         $user->password = bcrypt('pass@admin');
         $user->role='admin';
         $user->save();
-        return redirect()->route('admin.home')->with('success','created successfully');
+        return view('users.home')->with('success','created successfully');
     }
 
     /**
@@ -100,7 +100,7 @@ class UserController extends Controller
         
         $user->role='admin';
         $user->save();  
-        return redirect('admin/home');
+        return redirect('/newhomepage');
     }
 
     /**

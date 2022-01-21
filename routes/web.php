@@ -20,12 +20,15 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('/home','HomeController@index');
 Route::resource('employees', 'EmployeeController');
 Route::resource('users', 'UserController');
 Route::delete('/employees/{id}', 'EmployeeController@destroy')->name('employees.destroy');
-Route::get('/profile', 'ProfileController@profile')->name('profile');
 Route::patch('/profile', 'ProfileController@update_profile')->name('profile.update');
-Route::get('/admin/home', 'HomeController@index')->name('admin.home');
+Route::get('/users/home', 'HomeController@index11');
+Route::get('/employees/home', 'HomeController@new_employee');
 Route::get('/changePassword','EmployeeController@showChangePasswordForm')->name('changePassword');
 Route::post('/changePassword','EmployeeController@changePassword')->name('changePassword');
+Route::get('/newhomepage','HomeController@newhome');
+Route::resource('attendance', 'AttendanceController');
+// Route::get('/attendance', 'AttendanceController@show_emp_attendance');

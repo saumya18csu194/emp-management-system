@@ -18,19 +18,19 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            //return redirect('/home');
+            
             $role = Auth::user()->role;
-            if ($role == 'admin') {
-                return redirect('/admin/home');
+            if(strcmp($role, 'admin') == 0){
+                return response()->view('users.home');
             } 
-            else if($role =='employee') {
-                return redirect('/employee/home');
+            else if(strcmp($role, 'employee') == 0) {
+                return response()->view('employees.home');
             }
             else if($role=='manager') {
-                return redirect('/manager/home');
+                return response()->view('manager.home');
             }
             else
-            return redirect('home');
+            return response()->view('employees.home');
         }
 
         return $next($request);
