@@ -18,21 +18,23 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            
-            $role = Auth::user()->role;
-            if(strcmp($role, 'admin') == 0){
-                return response()->view('users.home');
-            } 
-            else if(strcmp($role, 'employee') == 0) {
-                return response()->view('employees.home');
-            }
-            else if($role=='manager') {
-                return response()->view('manager.home');
-            }
-            else
+                
+        if ($role == User::ROLE_TYPE_ADMIN)
+        {
+            return response()->view('users.home');
+        }
+        else if($role ==User::ROLE_TYPE_EMPLOYEE )
+        {
             return response()->view('employees.home');
         }
-
+        else if($role ==User::ROLE_TYPE_MANAGER)
+        {
+            return response()->view('managers.home');
+        }
+        else
+        {
+            return view('home');
+        }}
         return $next($request);
-    }
-}
+    
+}}

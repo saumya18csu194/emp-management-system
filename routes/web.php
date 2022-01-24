@@ -27,8 +27,8 @@ Route::delete('/employees/{id}', 'EmployeeController@destroy')->name('employees.
 Route::patch('/profile', 'ProfileController@update_profile')->name('profile.update');
 Route::get('/users/home', 'HomeController@index11');
 Route::get('/employees/home', 'HomeController@new_employee');
-Route::get('/changePassword','EmployeeController@showChangePasswordForm')->name('changePassword');
-Route::post('/changePassword','EmployeeController@changePassword')->name('changePassword');
+Route::get('/changePassword','HomeController@showChangePasswordForm')->name('changePassword');
+Route::post('/changePassword','HomeController@changePassword')->name('changePassword');
 Route::get('/newhomepage','HomeController@newhome');
 Route::resource('attendance', 'AttendanceController');
-// Route::get('/attendance', 'AttendanceController@show_emp_attendance');
+

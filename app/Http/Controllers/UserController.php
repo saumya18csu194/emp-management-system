@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Validator;
 class UserController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -13,19 +15,10 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $s=User::count();
-        $search =  $request->input('q');
-        if($search!=""){
-            $employees= User::where(function ($query) use ($search){
-                $query->where('name', 'like', '%'.$search.'%');
-                   
-            })
-            ->paginate(2);
-            $employees->appends(['q' => $search]);
-        }
-        else{
-            $employees = User::where('role', '=', 'admin')->paginate(2);
-        }
+         $s=User::count();
+
+        $user1=new User();
+        $employees=$user1->search_user($request);
         return view('users.index',compact('employees','s'));
     }
 
@@ -47,17 +40,12 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = \Validator::make($request->all(), [
+        $this->validate($request, [
             'name'=>'required',
-            'email' => 'required|email|unique',]);
-             
-        
-        $user=new User();
-        $user->name=$request->input('name');
-        $user->email=$request->input('email');
-        $user->password = bcrypt('pass@admin');
-        $user->role='admin';
-        $user->save();
+            'email' => 'required',]);
+           
+        $user1=new User();
+        $user1->create_user($request);
         return view('users.home')->with('success','created successfully');
     }
 
@@ -94,12 +82,8 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::find($id);  
-        $user->name =$request->get('name');  
-        $user->email =$request->get('email');
-        $user->password = bcrypt('pass@admin');
-        
-        $user->role='admin';
-        $user->save();  
+     
+        $user->save_user($request,$id);
         return redirect('/newhomepage');
     }
 

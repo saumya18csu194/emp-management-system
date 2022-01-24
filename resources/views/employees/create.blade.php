@@ -191,13 +191,17 @@ $('#select_manager').click(function()
       
                             <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                         </form>
+              @if ($errors->any())
+<div class="alert alert-danger">
+<script>     alert(" Please Enter Correct Details"); </script>
+        
+  </div>
+  @endif
 </body>
 </html>           
        
         
-       </form>
-        </div>
-      </div>
+       
+        
       
-    </body>
-</html>
+

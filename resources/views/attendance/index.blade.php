@@ -50,10 +50,10 @@
     <thead>
       <tr>
         <th>ID</th>
-        <th>Full Name</th>
-        <th>Email ID</th>
-        <th>Age</th>
-        <th>Address</th>
+        <th>Shift Date From</th>
+        <th>Shift Date To</th>
+        <th>Location</th>
+        <th>Message</th>
     </thead>
     <tbody>
   
@@ -69,11 +69,11 @@
         <td>
         <form class="row" method="POST" action="{{ url('attendance')}}">
                         
-                        <a href="{{ route('attendance.edit', ['attendance_id' => $emp->attendance_id]) }}" class="btn">
-                        Update
+                        <a href="{{ route('attendance.edit', ['attendance_id' => $emp->attendance_id]) }}" class="btn btn-info">
+                        Approve Attendance Request
                         </a>
-                         <button type="submit">
-                          Delete
+                         <button type="submit" class='btn btn-info'>
+                          Delete Attendance Request
                         </button>
                     </form>
                   </td>

@@ -55,7 +55,7 @@
           <legend>Edit Admin Information</legend>
         
           <label for="name">Name:</label>
-          <input type="text" id="full_name" name="full_name" placeholder="Enter Full Name" value={{$user->name}}>
+          <input type="text" id="name" name="name" placeholder="Enter Full Name" value={{$user->name}}>
         
           <label for="email">Email:</label>
           <input type="email" id="email" name="email" placeholder="Enter Valid Email Address" value={{$user->email}}>
