@@ -47,7 +47,11 @@ class User extends Authenticatable
             $user1->email=$request->input('email');
             $user1->password = bcrypt('pass@manager');
             $user1->role='manager';
-            
+            $abcd=$request->input('selectEmp1');
+            foreach ($abcd as $a)
+            {
+                Employee::where('emp_id', $a)->update(array('m_id' => $value));
+            }
             $user1->save();
         }
         else
@@ -58,11 +62,7 @@ class User extends Authenticatable
         $user1->password = bcrypt('pass@employee');
         $user1->role='employee';
         $user1->save();
-        $abcd=$request->input('selectEmp1');
-        foreach ($abcd as $a)
-        {
-            Employee::where('emp_id', $a)->update(array('m_id' => $value));
-        }
+
         }
     }
     public function save_user(Request $request,$id)

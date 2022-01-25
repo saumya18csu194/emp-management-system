@@ -5,7 +5,8 @@ use Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Attendance;
-class AttendanceController extends Controller
+use App\Employee;
+class AttendanceController extends Controller 
 {
     /**
      * Display a listing of the resource.
@@ -14,14 +15,8 @@ class AttendanceController extends Controller
      */
     public function index()
     {
-        $email=Auth::user()->email;
-        $emp=DB::table('employees')->where('email',$email)->first();
-        $get_emp_id=DB::table('employees')->where('emp_id',$emp->emp_id)->first();
-        $empid=$get_emp_id->emp_id;
-      
-        // $result=DB::select("select * from attendances where emp_id in ");
-        $result=DB::select("select * from attendances where emp_id in(SELECT emp_id FROM employees WHERE m_id=$empid) and status!=1");
-     
+        $view=new Attendance();
+        $result=$view->view_attendance();   //function defined in Attendance model to return attendance requests made by employees under manager
         return view('attendance.index',compact('result'));
     }
 
@@ -33,7 +28,7 @@ class AttendanceController extends Controller
      */
     public function create()
     {
-        return view('attendance.create');
+        return view('attendance.create');  //for employee to create a new attendance request
     }
 
     /**
@@ -44,32 +39,11 @@ class AttendanceController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $email=Auth::user()->email;
-        $emp=DB::table('employees')->where('email',$email)->first();
-        $get_emp_id=DB::table('employees')->where('emp_id',$emp->emp_id)->first();
-        $empid=$get_emp_id->emp_id;
-        Attendance::create($request->all()+ ['emp_id' => $empid,'status'=>0]);
-       
-        return redirect('/newhomepage'); 
+        $store=new Attendance();
+        $result=$store->store_attendance($request);  
+        return redirect('/newhomepage'); //when attendance request created
     }
 
-
-
-    public function get_status()
-    {
-
-    }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -79,31 +53,9 @@ class AttendanceController extends Controller
      */
     public function edit($attendance_id)
     {
-
-        Attendance::where('attendance_id', $attendance_id)->update(array('status' => 1));
+        $update_attendance=new Attendance();
+        $result=$update_attendance->update_attendance_request($attendance_id);  //function defined in Attendance model when manager approves attendance request made by employee 
         return redirect()->back();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

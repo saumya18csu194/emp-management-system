@@ -10,19 +10,19 @@ use Illuminate\Http\Request;
 class Employee extends Model
 {
     protected $fillable = ["emp_id","full_name", "email", "age","gender","phone_number","address","birth_date","joining_date"];
-
+    protected $table='employees';
     public function get_employee()
     {
-        $user1=DB::table('employees')->get();
+        $user1=DB::table('employees')->get();       
         return $user1;
     }
     public function search_employee(Request $request)
     {
         $search =  $request->input('q');
         if($search!=""){
-            $employees= Employee::where(function ($query) use ($search){
-                $query->where('full_name', 'like', '%'.$search.'%');
-               
+            $employees= Employee::where(function ($query) use ($search)
+            {
+                $query->where('full_name', 'like', '%'.$search.'%');  
             })
             ->paginate(2);
             $employees->appends(['q' => $search]);
@@ -31,6 +31,7 @@ class Employee extends Model
         {
             $employees = Employee::paginate(2);
         }
+        error_log(print_r($employees)); //to check print_r working
         return $employees;
     }
 
