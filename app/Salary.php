@@ -19,4 +19,16 @@ class Salary extends Model
         $salary->s_id=$value;
         $salary->save();
     }
+    public function update_salary($request,$id)
+    {
+        $emp=Employee::where('id',$id)->first() ;
+        $salary=Salary::where('s_id',$emp->emp_id)->first(); 
+        $salary_data=array(
+        'package' => $request->get('package'),
+        'gratuity' => $request->get('gratuity'),
+        'variable_salary' => $request->get('variable_salary'),
+        'basic_pay' => $request->get('basic_pay'),
+        'rent_allowance' => $request->get('rent_allowance')); 
+         Salary::where('s_id',$emp->emp_id)->update($salary_data);  
+    }
 }

@@ -60,19 +60,16 @@ class EmployeeController extends Controller
             'address'=>'required',
             'birth_date'=>'required',
             'joining_date'=>'required',]);
-            //try catch implement
+           
         $value=$this->randomUserId();
         Employee::create($request->all()+ ['emp_id' => $value]);        
         $user2=new User();
         $user2->store_user($request,$value);
         $salary=new Salary();
         $salary->store_salary($request,$value);
-        try{
-        dispatch(new EmailJob());}
-        catch(Exception $e)
-        {
-            error_log($e);
-        }
+
+        dispatch(new EmailJob());
+
         return redirect('/newhomepage')->with('success','created successfully'); 
     }
     /**
@@ -98,28 +95,10 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
-        $emp=Employee::where('id',$id)->first() ;
-        $empl=Employee::where('emp_id',$emp->emp_id)->first();
-        $data=array('full_name' => $request->get('full_name'),
-        'email' => $request->get('email'),
-        'gender' => $request->get('gender'),
-        'address' => $request->get('address'),
-        'birth_date' => $request->get('birth_date'),
-        'joining_date' => $request->get('joining_date'),
-        'm_id'=>$request->get('m_id'));
-      
-        Employee::where('emp_id',$emp->emp_id)->update($data);  
-        $salary=Salary::where('s_id',$emp->emp_id)->first(); 
-        $salary_data=array(
-        'package' => $request->get('package'),
-        'gratuity' => $request->get('gratuity'),
-        'variable_salary' => $request->get('variable_salary'),
-        'basic_pay' => $request->get('basic_pay'),
-        'rent_allowance' => $request->get('rent_allowance')); 
-         Salary::where('s_id',$emp->emp_id)->update($salary_data);  
-         $mid= $request->get('mid');
-         Employee::where('emp_id',$emp->emp_id)->update(array('m_id' => $mid));
+        $emp=new Employee();
+        $salary=new Salary();
+        $emp->update_employee($request,$id);
+        $salary->update_salary($request,$id);
         return redirect('/newhomepage')->with('success','created successfully'); 
     }
     /**
