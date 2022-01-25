@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use User;
+use App\User;
 use DB;
 use Illuminate\Http\Request;
 
@@ -46,17 +46,13 @@ class Employee extends Model
         'joining_date' => $request->get('joining_date'),
         'm_id'=>$request->get('m_id'));     
         Employee::where('emp_id',$emp->emp_id)->update($data);  
-        
-        // $salary=Salary::where('s_id',$emp->emp_id)->first(); 
-        // $salary_data=array(
-        // 'package' => $request->get('package'),
-        // 'gratuity' => $request->get('gratuity'),
-        // 'variable_salary' => $request->get('variable_salary'),
-        // 'basic_pay' => $request->get('basic_pay'),
-        // 'rent_allowance' => $request->get('rent_allowance')); 
-        //  Salary::where('s_id',$emp->emp_id)->update($salary_data);  
-         $mid= $request->get('mid');
-         Employee::where('emp_id',$emp->emp_id)->update(array('m_id' => $mid));
+        $mid= $request->get('mid');
+        Employee::where('emp_id',$emp->emp_id)->update(array('m_id' => $mid));
     }
-
+    public function delete_employee($id)
+    {
+        $emp=Employee::where('id',$id)->get() ;
+        Employee::where('emp_id',$emp[0]->emp_id)->delete() ;       
+        
+    }
 }

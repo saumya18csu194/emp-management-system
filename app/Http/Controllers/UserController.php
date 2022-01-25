@@ -49,16 +49,7 @@ class UserController extends Controller
         return view('users.home')->with('success','created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -82,7 +73,6 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::find($id);  
-     
         $user->save_user($request,$id);
         return redirect('/newhomepage');
     }

@@ -68,7 +68,7 @@
       </tr>
     </thead>
     <tbody>
-    <p>TOTAL NUMBER OF EMPLOYEES = {{ $s }}</p>  
+ 
       @foreach($employees as $emp)
      
       <tr>

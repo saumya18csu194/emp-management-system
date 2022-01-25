@@ -24,10 +24,10 @@ class EmployeeController extends Controller
     
     public function index(Request $request)
     {
-        $s=Employee::count();
+        // $s=Employee::count();
         $user1=new Employee();
         $employees=$user1->search_employee($request);  
-        return view('employees.index',compact('employees','s'));
+        return view('employees.index',compact('employees'));
         
     }
 
@@ -109,9 +109,8 @@ class EmployeeController extends Controller
      */
     public function destroy($id)
     {
-        $emp=Employee::where('id',$id)->get() ;
-        Employee::where('emp_id',$emp[0]->emp_id)->delete() ;       
-        User::where('id',$emp[0]->emp_id)->delete() ;
+        $emp=new Employee();
+        $emp->delete_employee($id);
         return redirect()->back();
     }  
     public function randomUserId()        //to generate employee id

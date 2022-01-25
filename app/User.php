@@ -62,7 +62,6 @@ class User extends Authenticatable
         $user1->password = bcrypt('pass@employee');
         $user1->role='employee';
         $user1->save();
-
         }
     }
     public function save_user(Request $request,$id)
@@ -76,19 +75,24 @@ class User extends Authenticatable
     }
     public function search_user(Request $request)
     {
-        $s=User::count();
+        // $s=User::count();
         $search =  $request->input('q');
         if($search!=""){
-            $employees= User::where(function ($query) use ($search){
-                $query->where('name', 'like', '%'.$search.'%')
-                ->where('role', '=', 'admin');
-            })
-            ->paginate(2);
-            $employees->appends(['q' => $search]);
-        }
+            $employees= User::where('name', 'like', '%'.$search.'%')
+                ->where('role', '=', 'admin')
+                ->paginate(2);
+                $employees->appends(['q' => $search]);
+            }
+            
+           
+        
         else{
             $employees = User::where('role', '=', 'admin')->paginate(2);
         }
         return $employees;
+    }
+    public function delete_user($id,$emp)
+    {
+        User::where('id',$emp[0]->emp_id)->delete() ;
     }
 }
