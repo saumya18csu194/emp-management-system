@@ -18,8 +18,7 @@ class AttendanceController extends Controller
         $emp=new Employee();
         $empid=$emp->find_employee_by_email();
         $view=new Attendance();
-        $result=$view->view_attendance($empid);         
-        //function defined in Attendance model to return attendance requests made by employees under manager
+        $result=$view->view_attendance($empid);   //function defined in Attendance model to return attendance requests made by employees under manager
         return view('attendance.index',compact('result'));
     }
     /**

@@ -24,9 +24,9 @@ class EmployeeController extends Controller
 
     public function index(Request $request)  //search function and display data
     {
-        $input=['search_word'=>$request->input('search_word')];
+        $search_word=['search_word'=>$request->input('search_word')];  //input the search word that user is entering
         $user1 = new Employee();
-        $employees = $user1->search_employee($input);
+        $employees = $user1->search_employee($search_word);
         return view('employees.index', compact('employees'));
     }
 
@@ -60,10 +60,11 @@ class EmployeeController extends Controller
             'birth_date' => 'required',
             'joining_date' => 'required',
         ]);
-        DB::beginTransaction();
+        
         try
         {
-        $employee_data=[
+        DB::beginTransaction();              //transaction to store employee details in employee,user,salary table
+        $employee_data=[                                        //store the employee details in an array and pass to model
             'full_name' => $request->input('full_name'),
             'email' => $request->input('email'),
             'age' => $request->input('age'),
@@ -73,13 +74,12 @@ class EmployeeController extends Controller
             'birth_date' => $request->input('birth_date'),
             'joining_date' => $request->input('joining_date'),
         ];
-        $value = $this->randomUserId();
-      
+        $value = $this->randomUserId();             //call the function to generate unique id      
         $emp=new Employee();
         $emp->store_employee($employee_data,$value);
         $user2=new User();
-        $abcd=$request->input('selectEmp1');
-        if($request->input('select_manager')=='On')
+        $employees_under_manager=$request->input('selectEmp1');            //employees under new manager select dropdown
+        if($request->input('select_manager')=='On')          //if admin clicks on checkbox :employee is also manager
         { 
             $select_manager=[           
             'name'=>$request->input('full_name'),
@@ -89,7 +89,7 @@ class EmployeeController extends Controller
             'id'=>$value,         
             ];
             
-            $user2->store_manager($abcd,$select_manager,$value);          
+            $user2->store_manager($employees_under_manager,$select_manager,$value);          
         }
         else
         {     
@@ -115,13 +115,14 @@ class EmployeeController extends Controller
            
         ];
         $salary->store_salary($salary_save,$value);
+        DB::commit();  
     }
     catch(Exception $e)
     {
         error_log($e);
         DB::rollback();
     }
-    DB::commit();  
+    
     return redirect('/newhomepage')->with('success', 'created successfully');
     }
     /**
@@ -153,9 +154,10 @@ class EmployeeController extends Controller
         $salary = new Salary();
         $user=new User();
         $emp=new Employee();   
-        DB::beginTransaction();
+        
         try
         {   
+        DB::beginTransaction();
         $data=array('full_name' => $request->get('full_name'),
         'email' => $request->get('email'),
         'gender' => $request->get('gender'),
@@ -175,14 +177,14 @@ class EmployeeController extends Controller
             'basic_pay' => $request->get('basic_pay'),
             'rent_allowance' => $request->get('rent_allowance')); 
         $salary->update_salary($salary_data, $id);
-
+        DB::commit();
         }
         catch(Exception $e)
         {
             error_log(print_r($e));
             DB::rollback();
         }
-        DB::commit();
+        
         return redirect('/newhomepage')->with('success', 'created successfully');
     }
     /**
@@ -193,11 +195,14 @@ class EmployeeController extends Controller
      */
     public function destroy($id)  //delete employee data 
     {
-        DB::beginTransaction();
+       
         try
         {
+        DB::beginTransaction();
         $emp = new Employee();
-        $emp->delete_employee($id);
+        $emp->delete_employee($id);    //delete employee data from employee table   
+        $user = new User();
+        $user->delete_user($id);//delete employee data from user table 
         DB::commit();
         }
         catch(Exception $e)

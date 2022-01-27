@@ -84,13 +84,14 @@ class User extends Authenticatable
         return $employees;
     }
 
-    public function delete_user($id,$emp) //Delete employee data from user table
-    {
-        self::where('id',$emp[0]->emp_id)->delete() ;
+    public function delete_user($empid) //Delete employee data from user table
+    {   
+        self::where('id', $empid)->delete();
+        
     }
-    public function delete_admin($id)  //Delete admin data from user table
+    public function delete_admin($emp2)  //Delete admin data from user table
     {
-        self::where('id', $id)->delete();
+        self::where('id', $emp2)->delete();
     }
 }
 
