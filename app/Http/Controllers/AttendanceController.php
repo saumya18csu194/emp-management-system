@@ -15,12 +15,12 @@ class AttendanceController extends Controller
      */
     public function index()
     {
+        $emp=new Employee();
+        $empid=$emp->find_employee_by_email();
         $view=new Attendance();
-        $result=$view->view_attendance();   //function defined in Attendance model to return attendance requests made by employees under manager
+        $result=$view->view_attendance($empid);   //function defined in Attendance model to return attendance requests made by employees under manager
         return view('attendance.index',compact('result'));
     }
-
-
     /**
      * Show the form for creating a new resource.
      *
@@ -39,12 +39,18 @@ class AttendanceController extends Controller
      */
     public function store(Request $request)
     {
-        $store=new Attendance();
-        $result=$store->store_attendance($request);  
+        $emp=new Employee();
+        $empid=$emp->find_employee_by_email(); //to get emp_id of employee who is creating attendance request
+        $store=new Attendance();       
+        $attendance_data=[
+            'shift_date_from' => $request->input('shift_date_from'),
+            'shift_date_to' => $request->input('shift_date_to'),
+            'location' => $request->input('location'),
+            'message' => $request->input('message'),
+        ];
+        $result=$store->store_attendance($attendance_data,$empid);  
         return redirect('/newhomepage'); //when attendance request created
     }
-
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -57,5 +63,4 @@ class AttendanceController extends Controller
         $result=$update_attendance->update_attendance_request($attendance_id);  //function defined in Attendance model when manager approves attendance request made by employee 
         return redirect()->back();
     }
-
 }

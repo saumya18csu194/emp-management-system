@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,14 +22,14 @@
     <ul class="nav navbar-nav navbar-right">
     
     <li><a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            <span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
-                                        </a><form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-</li>
-<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ Auth::user()->name }} <span class="caret"></span></a>
+            onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+            <span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        </a><form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            {{ csrf_field() }}
+        </form>
+    </li>
+    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ Auth::user()->name }} <span class="caret"></span></a>
         <ul class="dropdown-menu">
           <li><a href="#">View Profile</a></li>
           <li><a href="{{ route('changePassword') }}">Change Password</a></li>
@@ -39,7 +38,7 @@
       </li>
                                          
         </ul>
-      </li>
+    </li>
     </ul>
   </div>
 </nav>

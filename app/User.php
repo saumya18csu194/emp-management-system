@@ -28,71 +28,69 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-    public function create_user(Request $request)
+    public function store_user($admin_data)
     {
-        $user=new User();
-        $user->name=$request->input('name');
-        $user->email=$request->input('email');
-        $user->password = bcrypt('pass@admin');
-        $user->role='admin';
-        $user->save();
+        self::create($admin_data);
     }
-    public function store_user(Request $request,$value)
+    public function find_managerlist()
     {
-        $user1=new User();
-        if($request->input('select_manager')=='On')
-        { 
-            $user1->id=$value;
-            $user1->name=$request->input('full_name');
-            $user1->email=$request->input('email');
-            $user1->password = bcrypt('pass@manager');
-            $user1->role='manager';
-            $abcd=$request->input('selectEmp1');
+        $items = self::where('role',self::ROLE_TYPE_MANAGER)->get();
+        return $items;
+    }
+    public function store_manager($abcd,$select_manager,$value)
+    {
+            $role=array(['role'=>self::ROLE_TYPE_MANAGER]);
+            $save=array_merge($select_manager,$role);
             foreach ($abcd as $a)
             {
                 Employee::where('emp_id', $a)->update(array('m_id' => $value));
             }
-            $user1->save();
+            self::update($save);   
+    }
+    public function store_employeee($select_emp)
+    {
+        try
+        {       
+        $role=['role'=>self::ROLE_TYPE_EMPLOYEE];
+        $save=array_merge($select_emp,$role);
+        var_dump($save);
+        error_log(print_r($save));
+        self::insert($save);
         }
-        else
+        catch(Exception $e)
         {
-        $user1->id=$value;
-        $user1->name=$request->input('full_name');
-        $user1->email=$request->input('email');
-        $user1->password = bcrypt('pass@employee');
-        $user1->role='employee';
-        $user1->save();
+            error_log($e);
         }
     }
-    public function save_user(Request $request,$id)
+    public function save_admin($update_admin_data,$id)
     {
-        $user = User::find($id); 
-        $user->name =$request->get('name');  
-        $user->email =$request->get('email');
-        $user->password = bcrypt('pass@admin');  
-        $user->role='admin';
-        $user->save();  
+        $admin=self::where('id',$id)->first() ;
+        self::where('id',$admin->id)->update($update_admin_data);  
     }
-    public function search_user(Request $request)
-    {
-        // $s=User::count();
-        $search =  $request->input('q');
+    public function search_user($search)
+    {   
         if($search!=""){
-            $employees= User::where('name', 'like', '%'.$search.'%')
-                ->where('role', '=', 'admin')
+            $employees= self::where('name', 'like', '%'.$search.'%')
+                ->where('role', '=', self::ROLE_TYPE_ADMIN)
                 ->paginate(2);
-                $employees->appends(['q' => $search]);
-            }
-            
-           
-        
+                $employees->appends(['search_word' => $search]);
+            }     
         else{
-            $employees = User::where('role', '=', 'admin')->paginate(2);
+            $employees = self::where('role', '=', self::ROLE_TYPE_ADMIN)->paginate(2);
         }
         return $employees;
     }
-    public function delete_user($id,$emp)
+
+    public function delete_user($id,$emp) //Delete employee data from user table
     {
-        User::where('id',$emp[0]->emp_id)->delete() ;
+        self::where('id',$emp[0]->emp_id)->delete() ;
+    }
+    public function delete_admin($id)  //Delete admin data from user table
+    {
+        self::where('id', $id)->delete();
     }
 }
+
+
+
+

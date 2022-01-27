@@ -13,13 +13,12 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request) //search function and display data
     {
-         $s=User::count();
-
         $user1=new User();
-        $employees=$user1->search_user($request);
-        return view('users.index',compact('employees','s'));
+        $search =  $request->input('search_word');
+        $employees=$user1->search_user($search);
+        return view('users.index',compact('employees'));
     }
 
     /**
@@ -45,7 +44,13 @@ class UserController extends Controller
             'email' => 'required',]);
            
         $user1=new User();
-        $user1->create_user($request);
+        $admin_data = [
+        'name'=>$request->input('name'),
+        'email'=>$request->input('email'),
+        'password'=> bcrypt('pass@admin'),
+         'role'=>'admin',
+        ];
+        $user1->store_user($admin_data);
         return view('users.home')->with('success','created successfully');
     }
 
@@ -72,8 +77,15 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::find($id);  
-        $user->save_user($request,$id);
+        $user=new User();
+        $update_admin_data=[
+        'name' =>$request->get('name'),
+        'email'=>$request->get('email'),
+         'password' => bcrypt('pass@admin'),  
+        'role'=>'admin',
+        ];
+      
+        $user->save_admin($update_admin_data,$id);
         return redirect('/newhomepage');
     }
 
@@ -85,7 +97,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        User::where('id', $id)->delete();
+        $user=new User();
+        $user->delete_admin($id);
         return redirect()->intended('/users');
     }
 }
