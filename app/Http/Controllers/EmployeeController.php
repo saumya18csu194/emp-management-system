@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Employee;
@@ -62,6 +60,9 @@ class EmployeeController extends Controller
             'birth_date' => 'required',
             'joining_date' => 'required',
         ]);
+        DB::beginTransaction();
+        try
+        {
         $employee_data=[
             'full_name' => $request->input('full_name'),
             'email' => $request->input('email'),
@@ -73,6 +74,7 @@ class EmployeeController extends Controller
             'joining_date' => $request->input('joining_date'),
         ];
         $value = $this->randomUserId();
+      
         $emp=new Employee();
         $emp->store_employee($employee_data,$value);
         $user2=new User();
@@ -82,33 +84,45 @@ class EmployeeController extends Controller
             $select_manager=[           
             'name'=>$request->input('full_name'),
             'email'=>$request->input('email'),
+            'role'=>'manager',
             'password' => bcrypt('pass@manager'), 
             'id'=>$value,         
             ];
+            
             $user2->store_manager($abcd,$select_manager,$value);          
         }
         else
         {     
-        $select_emp=[  
+        $select_emp=[
+        'id'=>$value,  
         'name'=>$request->input('full_name'),
         'email'=>$request->input('email'),
+        'role'=>'employee',
         'password' => bcrypt('pass@employee'),
-        'id'=>$value,
+        
         ];
+        
         $user2->store_employeee($select_emp);
         }    
         $salary = new Salary();
         $salary_save=[
+            's_id'=>$value,
             'package'=>$request->input('package'),
             'variable_salary'=>$request->input('variable_salary'),
             'basic_pay'=>$request->input('basic_pay'),
             'rent_allowance'=>$request->input('rent_allowance'),
             'gratuity'=>$request->input('gratuity'),
-            's_id'=>$value,
+           
         ];
-        $salary->store_salary($salary_save);
-        dispatch(new EmailJob());           //test function
-        return redirect('/newhomepage')->with('success', 'created successfully');
+        $salary->store_salary($salary_save,$value);
+    }
+    catch(Exception $e)
+    {
+        error_log($e);
+        DB::rollback();
+    }
+    DB::commit();  
+    return redirect('/newhomepage')->with('success', 'created successfully');
     }
     /**
      * Show the form for editing the specified resource.
@@ -138,8 +152,10 @@ class EmployeeController extends Controller
         $emp = new Employee();
         $salary = new Salary();
         $user=new User();
-        $emp=new Employee();
-      
+        $emp=new Employee();   
+        DB::beginTransaction();
+        try
+        {   
         $data=array('full_name' => $request->get('full_name'),
         'email' => $request->get('email'),
         'gender' => $request->get('gender'),
@@ -159,6 +175,14 @@ class EmployeeController extends Controller
             'basic_pay' => $request->get('basic_pay'),
             'rent_allowance' => $request->get('rent_allowance')); 
         $salary->update_salary($salary_data, $id);
+
+        }
+        catch(Exception $e)
+        {
+            error_log(print_r($e));
+            DB::rollback();
+        }
+        DB::commit();
         return redirect('/newhomepage')->with('success', 'created successfully');
     }
     /**
@@ -169,8 +193,18 @@ class EmployeeController extends Controller
      */
     public function destroy($id)  //delete employee data 
     {
+        DB::beginTransaction();
+        try
+        {
         $emp = new Employee();
         $emp->delete_employee($id);
+        DB::commit();
+        }
+        catch(Exception $e)
+        {
+        error_log($e);
+        DB::rollback();
+        }
         return redirect()->back();
     }
     public function randomUserId() //generate employee id from timestamp+ random number

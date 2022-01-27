@@ -47,7 +47,7 @@ class UserController extends Controller
         $admin_data = [
         'name'=>$request->input('name'),
         'email'=>$request->input('email'),
-        'password'=> bcrypt('pass@admin'),
+        'password'=> bcrypt('pass@admin'),        //set a by default password of newly created admin
          'role'=>'admin',
         ];
         $user1->store_user($admin_data);
@@ -64,7 +64,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user= User::find($id);  
+        $userfind= new User();
+        $user=$userfind->find_id($id);
         return view('users.edit', compact('user'));
     }
 
@@ -83,8 +84,7 @@ class UserController extends Controller
         'email'=>$request->get('email'),
          'password' => bcrypt('pass@admin'),  
         'role'=>'admin',
-        ];
-      
+        ];    
         $user->save_admin($update_admin_data,$id);
         return redirect('/newhomepage');
     }

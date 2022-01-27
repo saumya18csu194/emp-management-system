@@ -1,115 +1,118 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
+
 <body>
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">.. EMS  RTDS.. </a>
-    </div>
-    <ul class="nav navbar-nav">
-      <li class="active"><a href="../newhomepage">Home</a></li>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">.. EMS RTDS.. </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="../newhomepage">Home</a></li>
 
-      <li><a href="#">About</a></li>
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-    
-    <li><a href="{{ route('logout') }}"
-            onclick="event.preventDefault();
+                <li><a href="#">About</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+
+                <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();">
-            <span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
-        </a><form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-            {{ csrf_field() }}
-        </form>
-    </li>
-    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ Auth::user()->name }} <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a href="#">View Profile</a></li>
-          <li><a href="{{ route('changePassword') }}">Change Password</a></li>
-        
-        </ul>
-      </li>
-                                         
-        </ul>
-    </li>
-    </ul>
-  </div>
-</nav>
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Change password</div>
+                        <span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    {{ csrf_field() }}
+                </form>
+                </li>
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ Auth::user()->name }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">View Profile</a></li>
+                        <li><a href="{{ route('changePassword') }}">Change Password</a></li>
 
-                <div class="panel-body">
-                    @if (session('error'))
+                    </ul>
+                </li>
+
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Change password</div>
+
+                    <div class="panel-body">
+                        @if (session('error'))
                         <div class="alert alert-danger">
                             {{ session('error') }}
                         </div>
-                    @endif
-                        @if (session('success'))
-                            <div class="alert alert-success">
-                                {{ session('success') }}
-                            </div>
                         @endif
-                    <form class="form-horizontal" method="POST" action="{{ route('changePassword') }}">
-                        {{ csrf_field() }}
+                        @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                        @endif
+                        <form class="form-horizontal" method="POST" action="{{ route('changePassword') }}">
+                            {{ csrf_field() }}
 
-                        <div class="form-group{{ $errors->has('current-password') ? ' has-error' : '' }}">
-                            <label for="new-password" class="col-md-4 control-label">Current Password</label>
+                            <div class="form-group{{ $errors->has('current-password') ? ' has-error' : '' }}">
+                                <label for="new-password" class="col-md-4 control-label">Current Password</label>
 
-                            <div class="col-md-6">
-                                <input id="current-password" type="password" class="form-control" name="current-password" required>
+                                <div class="col-md-6">
+                                    <input id="current-password" type="password" class="form-control" name="current-password" required>
 
-                                @if ($errors->has('current-password'))
+                                    @if ($errors->has('current-password'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('current-password') }}</strong>
                                     </span>
-                                @endif
+                                    @endif
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group{{ $errors->has('new-password') ? ' has-error' : '' }}">
-                            <label for="new-password" class="col-md-4 control-label">New Password</label>
+                            <div class="form-group{{ $errors->has('new-password') ? ' has-error' : '' }}">
+                                <label for="new-password" class="col-md-4 control-label">New Password</label>
 
-                            <div class="col-md-6">
-                                <input id="new-password" type="password" class="form-control" name="new-password" required>
+                                <div class="col-md-6">
+                                    <input id="new-password" type="password" class="form-control" name="new-password" required>
 
-                                @if ($errors->has('new-password'))
+                                    @if ($errors->has('new-password'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('new-password') }}</strong>
                                     </span>
-                                @endif
+                                    @endif
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="new-password-confirm" class="col-md-4 control-label">Confirm New Password</label>
+                            <div class="form-group">
+                                <label for="new-password-confirm" class="col-md-4 control-label">Confirm New Password</label>
 
-                            <div class="col-md-6">
-                                <input id="new-password-confirm" type="password" class="form-control" name="new-password_confirmation" required>
+                                <div class="col-md-6">
+                                    <input id="new-password-confirm" type="password" class="form-control" name="new-password_confirmation" required>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Change Password
-                                </button>
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        Change Password
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </body>
+
 </html>

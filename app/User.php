@@ -16,8 +16,10 @@ class User extends Authenticatable
      *
      * @var array
      */
+    
+    
     protected $fillable = [
-        'name', 'role','email', 'password',
+       'id','name', 'role','email', 'password',
     ];
 
     /**
@@ -28,6 +30,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+    public function find_id($id)
+    {
+        $user= User::find($id);  
+    }
     public function store_user($admin_data)
     {
         self::create($admin_data);
@@ -50,11 +56,8 @@ class User extends Authenticatable
     public function store_employeee($select_emp)
     {
         try
-        {       
-        $role=['role'=>self::ROLE_TYPE_EMPLOYEE];
-        $save=array_merge($select_emp,$role);
-        var_dump($save);
-        error_log(print_r($save));
+        {            
+        $save=array_merge($select_emp);
         self::insert($save);
         }
         catch(Exception $e)
