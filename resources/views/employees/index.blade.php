@@ -12,6 +12,7 @@
 </head>
 
 <body>
+<div id='paginationResults'>
   <nav class="navbar navbar-inverse">
     <div class="container-fluid">
       <div class="navbar-header">
@@ -45,6 +46,7 @@
       </ul>
     </div>
   </nav>
+
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-md-10">
@@ -57,49 +59,86 @@
           </div>
         </form>
       </div>
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Full Name</th>
-            <th>Email ID</th>
-            <th>Age</th>
-            <th>Address</th>
-            <th>Birth Date</th>
-            <th>Joining Date</th>
-          </tr>
-        </thead>
-        <tbody>
+      
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Full Name</th>
+              <th>Email ID</th>
+              <th>Age</th>
+              <th>Address</th>
+              <th>Birth Date</th>
+              <th>Joining Date</th>
+            </tr>
+          </thead>
+          <tbody>
 
-          @foreach($employees as $emp)
+            @foreach($employees as $emp)
 
-          <tr>
-            <td>{{$emp['emp_id']}}</td>
-            <td>{{$emp['full_name']}}</td>
-            <td>{{$emp['email']}}</td>
-            <td>{{$emp['age']}}</td>
-            <td>{{$emp['address']}}</td>
-            <td>{{$emp['birth_date']}}</td>
-            <td>{{$emp['joining_date']}}</td>
-            <td>
-              <form class="row" method="POST" action="{{ route('employees.destroy', ['id' => $emp->id]) }}" onsubmit="return confirm('Are you sure?')">
-                <input type="hidden" name="_method" value="DELETE">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <a href="{{ route('employees.edit', ['id' => $emp->id]) }}" class="btn">
-                  Update
-                </a>
-                <button type="submit">
-                  Delete
-                </button>
+
+            <tr>
+              <td>{{$emp['emp_id']}}</td>
+              <td>{{$emp['full_name']}}</td>
+              <td>{{$emp['email']}}</td>
+              <td>{{$emp['age']}}</td>
+              <td>{{$emp['address']}}</td>
+              <td>{{$emp['birth_date']}}</td>
+              <td>{{$emp['joining_date']}}</td>
+              <td>
+                <form class="row" method="POST" action="{{ route('employees.destroy', ['id' => $emp->id]) }}" onsubmit="return confirm('Are you sure?')">
+                  <input type="hidden" name="_method" value="DELETE">
+                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                  <a href="{{ route('employees.edit', ['id' => $emp->id]) }}" class="btn">
+                    Update
+                  </a>
+                  <button type="submit">
+                    Delete
+                  </button>
+                </form>
+              </td>
+              </a>
+              </td>
+
               </form>
-            </td>
-            </a>
-            </td>
-
-            </form>
-          </tr>
-          @endforeach
-        </tbody>
+            </tr>
+            @endforeach
+      
+      </tbody>
       </table>
-      {{$employees->links()}}
+      <div id='pagination'>
+        {{$employees->links()}}
+      </div>
     </div>
+    </div>
+    <script>
+      $(document).ready(function() {
+
+        $("#pagination").on("click", ".pagination a", function(e) {
+
+          e.preventDefault();                                  
+
+          var page = $(this).attr("href").split("page=")[1];
+
+          getEmployees(page);
+
+        });
+
+
+
+        function getEmployees(page) {
+
+          $.ajax({
+
+            url: "?page=" + page
+
+          }).done(function(data) {
+
+            $("#paginationResults").html(data);
+
+          });
+
+        }
+
+      });
+    </script>

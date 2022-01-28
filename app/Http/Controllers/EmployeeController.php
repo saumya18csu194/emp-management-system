@@ -30,6 +30,7 @@ class EmployeeController extends Controller
         return view('employees.index', compact('employees'));
     }
 
+
     /**
      * Show the form for creating a new resource.
      *
@@ -167,9 +168,9 @@ class EmployeeController extends Controller
         'm_id'=>$request->get('m_id'));   
         $mid= $request->get('mid');
         $emp->update_employee($data, $id,$mid);
-        $data=array('name' => $request->get('full_name'),
+        $empdata=array('name' => $request->get('full_name'),
         'email' => $request->get('email')); 
-   
+        $user->update_employee_in_user($data,$id);
         $salary_data=array(
             'package' => $request->get('package'),
             'gratuity' => $request->get('gratuity'),

@@ -43,6 +43,7 @@ class User extends Authenticatable
         $items = self::where('role',self::ROLE_TYPE_MANAGER)->get();
         return $items;
     }
+
     public function store_manager($abcd,$select_manager,$value)
     {
             $role=array(['role'=>self::ROLE_TYPE_MANAGER]);
@@ -70,6 +71,18 @@ class User extends Authenticatable
         $admin=self::where('id',$id)->first() ;
         self::where('id',$admin->id)->update($update_admin_data);  
     }
+    public function update_employee_in_user($data,$id)
+    {
+        $user=new self();
+        $user->name=$data['name'];
+        $user->email=$data['email'];     
+        $user->save(); 
+    }
+    public function delete_user($empid) //Delete employee data from user table
+    {   
+        self::where('id', $empid)->delete();
+        
+    }
     public function search_user($search)
     {   
         if($search!=""){
@@ -84,11 +97,7 @@ class User extends Authenticatable
         return $employees;
     }
 
-    public function delete_user($empid) //Delete employee data from user table
-    {   
-        self::where('id', $empid)->delete();
-        
-    }
+
     public function delete_admin($emp2)  //Delete admin data from user table
     {
         self::where('id', $emp2)->delete();

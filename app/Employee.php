@@ -57,9 +57,10 @@ class Employee extends Model
         {
             $employees = self::paginate(2);
         }
-        error_log(print_r($employees)); //to check print_r working
+    
         return $employees;
     }
+
     public function update_employee($data,$id,$mid)
     {
         $emp=self::where('id',$id)->first() ;
