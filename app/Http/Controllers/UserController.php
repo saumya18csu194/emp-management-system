@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\ValidateRequest;
 use Illuminate\Http\Request;
 use App\User;
 use Validator;
@@ -37,25 +37,20 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ValidateRequest $request)
     {
-        $this->validate($request, [
-            'name'=>'required',
-            'email' => 'required',]);
+       
            
         $user1=new User();
         $admin_data = [
         'name'=>$request->input('name'),
         'email'=>$request->input('email'),
-        'password'=> bcrypt('pass@admin'),        //set a by default password of newly created admin
-         'role'=>'admin',
+        'password'=> bcrypt('pass@admin'),        //set a default password of newly created admin
+        'role'=>'admin',
         ];
         $user1->store_user($admin_data);
         return view('users.home')->with('success','created successfully');
     }
-
-
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -76,13 +71,17 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id)  //update admin data in user table
     {
         $user=new User();
+        $this->validate($request, [
+            'name'=>'required',
+            'email' => 'required',]);
+        
         $update_admin_data=[
         'name' =>$request->get('name'),
         'email'=>$request->get('email'),
-         'password' => bcrypt('pass@admin'),  
+        'password' => bcrypt('pass@admin'),  
         'role'=>'admin',
         ];    
         $user->save_admin($update_admin_data,$id);

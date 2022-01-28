@@ -38,43 +38,36 @@ class User extends Authenticatable
     {
         self::create($admin_data);
     }
-    public function find_managerlist()
+    public function find_managerlist()                  //when admin selects a new manager for employee
     {
         $items = self::where('role',self::ROLE_TYPE_MANAGER)->get();
         return $items;
     }
 
-    public function store_manager($abcd,$select_manager,$value)
+    public function store_manager($employees_under_manager,$select_manager,$value)             //if new employee is also manager:store details of employees under new manager
     {
+          
             $role=array(['role'=>self::ROLE_TYPE_MANAGER]);
             $save=array_merge($select_manager,$role);
-            foreach ($abcd as $a)
-            {
-                Employee::where('emp_id', $a)->update(array('m_id' => $value));
-            }
-            self::update($save);   
+            $update= Employee::whereIn('emp_id',$employees_under_manager)
+            ->update(array('m_id' => $value)); 
+            
+           
+            
     }
-    public function store_employeee($select_emp)
-    {
-        try
-        {            
-        $save=array_merge($select_emp);
-        self::insert($save);
-        }
-        catch(Exception $e)
-        {
-            error_log($e);
-        }
+    public function store_employeee($select_emp)      
+    {                      
+        self::insert($select_emp);
     }
-    public function save_admin($update_admin_data,$id)
+    public function save_admin($update_admin_data,$id)             //save admin data to user table
     {
         $admin=self::where('id',$id)->first() ;
         self::where('id',$admin->id)->update($update_admin_data);  
     }
-    public function update_employee_in_user($data,$id)
+    public function update_employee_in_user($empid,$data,$id)      
     {
-        $user=new self();
-        $user->name=$data['name'];
+        $user=self::where('id',$empid)->first();
+        $user->name=$data['full_name'];
         $user->email=$data['email'];     
         $user->save(); 
     }
@@ -98,9 +91,9 @@ class User extends Authenticatable
     }
 
 
-    public function delete_admin($emp2)  //Delete admin data from user table
+    public function delete_admin($id)  //Delete admin data from user table
     {
-        self::where('id', $emp2)->delete();
+        self::where('id', $id)->delete();
     }
 }
 

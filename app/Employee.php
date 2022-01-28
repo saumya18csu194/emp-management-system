@@ -18,14 +18,19 @@ class Employee extends Model
         try
         {
         $empl = self::where('id', $id)->first();
-        $emp = self::where('emp_id', $empl->emp_id)->first();
-        
+        $emp = self::where('emp_id', $empl->emp_id)->first();        
         return $emp;
         }
         catch(Exception $e)
         {
             error_log($e);
         }       
+    }
+    public function find_empid($id)
+    {
+        $emp=Employee::where('id',$id)->first() ;
+        $empid=$emp->emp_id;
+        return $empid;
     }
     public function find_employee_by_email()
     {
@@ -71,9 +76,7 @@ class Employee extends Model
     }
     public function delete_employee($id)
     {
-        $emp=self::where('id',$id)->get() ;
-        $empid=self::where('emp_id',$emp[0]->emp_id)->delete() ;
-        
-                    
+        $emp=self::where('id',$id)->get();
+        $empid=self::where('emp_id',$emp[0]->emp_id)->delete();                    
     }
 }

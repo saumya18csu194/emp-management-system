@@ -53,17 +53,28 @@
                             <legend><span class="number">1</span>Enter Basic Information</legend>
         
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" placeholder="Enter Full Name">
-      
+        <input type="text" id="name" name="name" placeholder="Enter Name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}">
+        @if ($errors->has('name'))
+            <span class="invalid-feedback">
+                <strong>{{ $errors->first('name') }}</strong>
+            </span>
+        @endif
+        <br>
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" placeholder="Enter Valid Email Address">
-                            <input type="submit" class="btn btn-info" value="Submit">
+        <input type="email" id="email" name="email" placeholder="Enter Valid Email Address" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}">
+        @if ($errors->has('email'))
+            <span class="invalid-feedback">
+                <strong>{{ $errors->first('email') }}</strong>
+            </span>
+        @endif              
+        
+        
+        
+        <br>
+        <input type="submit" class="btn btn-info" value="Submit">
                             <input type="reset" class="btn btn-warning" value="Reset">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 </form>
-@if ($errors->any())
-<div class="alert alert-danger">
-<script>     alert(" Please Enter Correct Details"); </script>
-@endif
+
 </body>
 </html>
