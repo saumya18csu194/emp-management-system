@@ -72,10 +72,8 @@ class Employee extends Model
     public function delete_employee($id)
     {
         $emp=self::where('id',$id)->get() ;
-        $empid=self::where('emp_id',$emp[0]->emp_id) ;
-        $empid->delete();
-        return $empid;
+        $empid=self::where('emp_id',$emp[0]->emp_id)->delete() ;
         
-        // app('App\User')->delete_user($id,$emp);               
+                    
     }
 }

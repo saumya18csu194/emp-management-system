@@ -8,12 +8,9 @@ class Attendance extends Model
 {
     protected $fillable = ['attendance_id','shift_date_from','shift_date_to','location','message','status','emp_id','created_at','updated_at'];
     public function view_attendance($empid)
-    {
-
-       
+    {     
         //below is the query to return attendance queries made by employees under manager   
-        $result = DB::table('attendances')
-        ->whereIn('emp_id', function ($query) use ($empid){
+        $result = self::whereIn('emp_id', function ($query) use ($empid){
             $query->select('emp_id')
                 ->from('employees')
                 ->where('m_id',$empid)
@@ -26,7 +23,7 @@ class Attendance extends Model
     {
         self::create($attendance_data+ ['emp_id' => $empid,'status'=>0]);    //set status=0(which means manager has not approved )   
     }
-    public function update_attendance_request($attendance_id)
+    public function update_attendance_request($attendance_id) //manager approves attendance
     {
         self::where('attendance_id', $attendance_id)->update(array('status' => 1)); //set status=1(attendance approved)
     }
