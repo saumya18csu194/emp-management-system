@@ -79,7 +79,7 @@ class EmployeeController extends Controller
             $value = $this->randomUserId();             //call the function to generate unique id      
             $emp = new Employee();
             $emp->store_employee($employee_data, $value);
-            $user2 = new User();
+            
             $employees_under_manager = $request->input('selectEmp1');            //employees under new manager select dropdown
             if ($request->input('select_manager') == 'On')          //if admin clicks on checkbox :employee is also manager
             {
@@ -90,8 +90,7 @@ class EmployeeController extends Controller
                     'password' => bcrypt('pass@manager'),
                     'id' => $value,
                 ];
-
-                $user2->store_manager($employees_under_manager, $select_manager, $value);
+                $emp->store_manager($employees_under_manager, $select_manager, $value);
             } else {
                 $select_emp = [
                     'id' => $value,
@@ -100,7 +99,6 @@ class EmployeeController extends Controller
                     'role' => 'employee',
                     'password' => bcrypt('pass@employee'),
                 ];
-
                 $user2->store_employeee($select_emp);
             }
             $salary = new Salary();
@@ -111,11 +109,13 @@ class EmployeeController extends Controller
                 'basic_pay' => $request->input('basic_pay'),
                 'rent_allowance' => $request->input('rent_allowance'),
                 'gratuity' => $request->input('gratuity'),
-
             ];
+
             $salary->store_salary($salary_save, $value);
             DB::commit();
-        } catch (Exception $e) {
+        } 
+        catch (Exception $e) 
+        {
             error_log($e);
             DB::rollback();
         }
@@ -151,7 +151,8 @@ class EmployeeController extends Controller
         $salary = new Salary();
         $user = new User();
 
-        try {
+        try 
+        {
             DB::beginTransaction();
             $data = array(
                 'full_name' => $request->get('full_name'),
@@ -184,7 +185,9 @@ class EmployeeController extends Controller
 
             $salary->update_salary($salary_data, $id);
             DB::commit();
-        } catch (Exception $e) {
+        } 
+        catch (Exception $e)
+        {
             error_log(print_r($e));
             DB::rollback();
         }
@@ -200,20 +203,23 @@ class EmployeeController extends Controller
     public function destroy($id)  //delete employee data 
     {
 
-        try {
+        try 
+        {
             DB::beginTransaction();
             $emp = new Employee();
             $emp->delete_employee($id);    //delete employee data from employee table   
             $user = new User();
             $user->delete_user($id); //delete employee data from user table 
             DB::commit();
-        } catch (Exception $e) {
+        } 
+        catch (Exception $e) 
+        {
             error_log($e);
             DB::rollback();
         }
         return redirect()->back();
     }
-    public function randomUserId() //generate employee id from timestamp+ random number
+    public function randomUserId() //generate employee id from timestamp + random number
     {
         $timestamp = time();
         $random = rand(1, 100);

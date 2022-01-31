@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Attendance;
 use App\Employee;
+use App\Http\Requests\ValidationRequestAttendance;
 class AttendanceController extends Controller 
 {
     /**
@@ -37,7 +38,7 @@ class AttendanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ValidationRequestAttendance $request)
     {
         $emp=new Employee();
         $empid=$emp->find_employee_by_email(); //to get emp_id of employee who is creating attendance request
@@ -57,7 +58,7 @@ class AttendanceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($attendance_id)
+    public function edit($attendance_id) //manager edits employee attendance
     {
         $update_attendance=new Attendance();
         $result=$update_attendance->update_attendance_request($attendance_id);  //function defined in Attendance model when manager approves attendance request made by employee

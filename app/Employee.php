@@ -40,6 +40,13 @@ class Employee extends Model
         $empid=$get_emp_id->emp_id; 
         return $empid;
     }
+    public function store_manager($employees_under_manager,$select_manager,$value)             //if new employee is also manager:store details of employees under new manager
+    {          
+            $role=array(['role'=>self::ROLE_TYPE_MANAGER]);
+            $save=array_merge($select_manager,$role);
+            $update= self::whereIn('emp_id',$employees_under_manager)
+            ->update(array('m_id' => $value));                
+    }
     public function get_employee()
     {
         $user1=self::get();       

@@ -54,16 +54,35 @@
           
           <legend><span class="number">1</span>Enter Attendance Information</legend>
           <label for="shift_date_from">Shift Date From:</label>
-          <input type="date" id="shift_date_from" name="shift_date_from" >  
-
+          <input type="date" id="shift_date_from" name="shift_date_from" class="form-control{{ $errors->has('shift_date_from') ? ' is-invalid' : '' }}">  
+        @if ($errors->has('shift_date_from'))
+            <span class="invalid-feedback">
+                <strong>{{ $errors->first('shift_date_from') }}</strong>
+            </span>
+        @endif
           <label for="shift_date_to">Shift date to:</label>
-          <input type="date" id="shift_date_to" name="shift_date_to" >
-        
+          <input type="date" id="shift_date_to" name="shift_date_to" class="form-control{{ $errors->has('shift_date_to') ? ' is-invalid' : '' }}">
+        @if ($errors->has('shift_date_to'))
+            <span class="invalid-feedback">
+                <strong>{{ $errors->first('shift_date_to') }}</strong>
+            </span>
+        @endif
           <label for="location">Location:</label>
-          <input type="text" id="location" name="location" >
-       
+          <input type="text" id="location" name="location" class="form-control{{ $errors->has('location') ? ' is-invalid' : '' }}">
+        @if ($errors->has('location'))
+            <span class="invalid-feedback">
+                <strong>{{ $errors->first('location') }}</strong>
+            </span>
+        @endif
           <label for="message">Message:</label>
-          <textarea id="message" name="message" ></textarea>
+          <textarea id="message" name="message" ></textarea class="form-control{{ $errors->has('message') ? ' is-invalid' : '' }}">
+        @if ($errors->has('message'))
+            <span class="invalid-feedback">
+                <strong>{{ $errors->first('message') }}</strong>
+            </span>
+        @endif
+
+
           <input type="submit" class="btn btn-info" value="Submit">
                          
                          <input type="reset" class="btn btn-warning" value="Reset">
