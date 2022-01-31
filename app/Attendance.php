@@ -21,7 +21,7 @@ class Attendance extends Model
 
     public function store_attendance($attendance_data,$empid)
     {
-        self::create($attendance_data+ ['emp_id' => $empid,'status'=>0]);    //set status=0(which means manager has not approved )   
+        self::create($attendance_data+ ['emp_id' => $empid,'status'=>0]);    //set status=0(which means employee has requested attendance approve,not yet approoved)   
     }
     public function update_attendance_request($attendance_id) //manager approves attendance
     {

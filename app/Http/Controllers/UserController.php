@@ -5,6 +5,7 @@ use App\Http\Requests\ValidateRequest;
 use Illuminate\Http\Request;
 use App\User;
 use Validator;
+use Exception;
 class UserController extends Controller
 {
 
@@ -17,7 +18,7 @@ class UserController extends Controller
     {
         $user1=new User();
         $search =  $request->input('search_word');
-        $employees=$user1->search_user($search);
+        $employees=$user1->searchUser($search);
         return view('users.index',compact('employees'));
     }
 
@@ -38,17 +39,22 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(ValidateRequest $request)
-    {
-       
-           
-        $user1=new User();
-        $admin_data = [
-        'name'=>$request->input('name'),
-        'email'=>$request->input('email'),
-        'password'=> bcrypt('pass@admin'),        //set a default password of newly created admin
-        'role'=>'admin',
-        ];
-        $user1->store_user($admin_data);
+    {     
+        try
+        { 
+            $user1=new User();
+            $admin_data = [
+            'name'=>$request->input('name'),
+            'email'=>$request->input('email'),
+            'password'=> bcrypt('pass@admin'),        //set a default password of newly created admin
+            'role'=>'admin',
+            ];
+        $user1->storeUser($admin_data);
+        }
+        catch(Exception $e)
+        {
+            error_log($e);
+        }
         return view('users.home')->with('success','created successfully');
     }
     /**
@@ -59,8 +65,15 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        try
+        {
         $userfind= new User();
-        $user=$userfind->find_id($id);
+        $user=$userfind->findId($id);
+        }
+        catch(Exception $e)
+        {
+            error_log($e);
+        }
         return view('users.edit', compact('user'));
     }
 
@@ -71,20 +84,24 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)  //update admin data in user table
+    public function update(ValidateRequest $request, $id)  //update admin data in user table
     {
-        $user=new User();
-        $this->validate($request, [
-            'name'=>'required',
-            'email' => 'required',]);
-        
+        try
+        {
+        $user=new User();      
         $update_admin_data=[
         'name' =>$request->get('name'),
         'email'=>$request->get('email'),
         'password' => bcrypt('pass@admin'),  
         'role'=>'admin',
         ];    
-        $user->save_admin($update_admin_data,$id);
+        $user->saveAdmin($update_admin_data,$id);
+        }
+        catch(Exception $e)
+        {
+            error_log($e);
+        }
+
         return redirect('/newhomepage');
     }
 
@@ -96,8 +113,15 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user=new User();
-        $user->delete_admin($id);
+        try
+        {
+            $user=new User();
+            $user->deleteAdmin($id);          //delete admin record from users table
+        }
+        catch(Exception $e)
+        {
+            error_log($e);
+        }
         return redirect()->intended('/users');
     }
 }

@@ -24,7 +24,7 @@ class CreateEmployeesTable extends Migration
             $table->date('birth_date');
             $table->date('joining_date');
             $table->string('address');
-            $table->integer('m_id')->default(0);
+            $table->integer('m_id')->nullable();
             $table->timestamps();
         });
     }

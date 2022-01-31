@@ -30,4 +30,4 @@ Route::get('/changePassword','HomeController@showChangePasswordForm')->name('cha
 Route::post('/changePassword','HomeController@changePassword')->name('changePassword');
 Route::get('/newhomepage','HomeController@newhome');
 Route::resource('attendance', 'AttendanceController');
-Route::get('ajax-pagination',array('as'=>'pagination','uses'=>'EmployeeController@ajaxPagination'));
+

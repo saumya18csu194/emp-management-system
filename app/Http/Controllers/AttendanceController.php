@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Attendance;
 use App\Employee;
+use Exception;
 use App\Http\Requests\ValidationRequestAttendance;
 class AttendanceController extends Controller 
 {
@@ -14,13 +15,21 @@ class AttendanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     { 
+        try
+        {
         $emp=new Employee();
-        $empid=$emp->find_employee_by_email();
+        $empid=$emp->findEmpId($id);
         $view=new Attendance();
-        $result=$view->view_attendance($empid);   //function defined in Attendance model to return attendance requests made by employees under manager
+        $result=$view->viewAttendance($empid);   //function defined in Attendance model to return attendance requests made by employees under manager
         return view('attendance.index',compact('result'));
+        }
+        catch(Exception $e)
+        {
+        error_log($e);
+        }
+    
     }
     /**
      * Show the form for creating a new resource.
@@ -38,10 +47,12 @@ class AttendanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ValidationRequestAttendance $request)
+    public function store(ValidationRequestAttendance $request,$id)
     {
+        try
+        {
         $emp=new Employee();
-        $empid=$emp->find_employee_by_email(); //to get emp_id of employee who is creating attendance request
+        $empid=$emp->findEmpId($id); //to get emp_id of employee who is creating attendance request
         $store=new Attendance();       
         $attendance_data=[
             'shift_date_from' => $request->input('shift_date_from'),
@@ -49,8 +60,16 @@ class AttendanceController extends Controller
             'location' => $request->input('location'),
             'message' => $request->input('message'),
         ];
-        $result=$store->store_attendance($attendance_data,$empid);  
+        $result=$store->storeAttendance($attendance_data,$empid);  
         return redirect('/newhomepage'); //when attendance request created
+        }
+
+        catch(Exception $e)
+        {
+            error_log($e);
+            
+        }
+       
     }
     /**
      * Show the form for editing the specified resource.
@@ -60,9 +79,15 @@ class AttendanceController extends Controller
      */
     public function edit($attendance_id) //manager edits employee attendance
     {
+        try
+        {
         $update_attendance=new Attendance();
-        $result=$update_attendance->update_attendance_request($attendance_id);  //function defined in Attendance model when manager approves attendance request made by employee
-
+        $update=$update_attendance->updateAttendanceRequest($attendance_id);  //function defined in Attendance model when manager approves attendance request made by employee
         return redirect()->back();
+        }
+        catch(Exception $e)
+        {
+            error_log($e);
+        }
     }
 }

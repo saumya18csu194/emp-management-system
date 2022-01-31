@@ -57,7 +57,7 @@
     </thead>
     <tbody>
   
-      @foreach($result as $emp)
+      @foreach($update as $emp)
      
       <tr>
         <td>{{$emp->emp_id}}</td>

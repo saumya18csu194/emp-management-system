@@ -23,8 +23,7 @@ class CreateAttendancesTable extends Migration
             $table->integer('emp_id')->default(0);
             $table->timestamps();
         });
-        //shift date from,shift date to,Location,message,status(present or absent),clock-in time,clock-out time
-//by default absent
+        
     }
 
     /**

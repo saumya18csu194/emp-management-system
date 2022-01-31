@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Employee;
 use App\User;
 use Validator;
+use Exception;
 use App\Salary;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
@@ -28,10 +29,9 @@ class EmployeeController extends Controller
     {
         $search_word = ['search_word' => $request->input('search_word')];  //input the search word that user is entering
         $user1 = new Employee();
-        $employees = $user1->search_employee($search_word);
+        $employees = $user1->searchEmployee($search_word);
         return view('employees.index', compact('employees'));
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -41,7 +41,7 @@ class EmployeeController extends Controller
     public function create(Request $request)  //admin adds new employee data
     {
         $user = new Employee();
-        $user1 = $user->get_employee();
+        $user1 = $user->getEmployee();
         return view('employees.create', compact('user1'));
     }
 
@@ -62,6 +62,11 @@ class EmployeeController extends Controller
             'address' => 'required',
             'birth_date' => 'required',
             'joining_date' => 'required',
+            'package' =>'required',
+            'gratuity' => 'required',
+            'variable_salary' => 'required',
+            'basic_pay' => 'required',
+            'rent_allowance'=>'required'
         ]);
 
         try {
@@ -78,20 +83,24 @@ class EmployeeController extends Controller
             ];
             $value = $this->randomUserId();             //call the function to generate unique id      
             $emp = new Employee();
-            $emp->store_employee($employee_data, $value);
-            
+            $user2=new User();
+            $emp->storeEmployee($employee_data, $value);         
             $employees_under_manager = $request->input('selectEmp1');            //employees under new manager select dropdown
             if ($request->input('select_manager') == 'On')          //if admin clicks on checkbox :employee is also manager
             {
                 $select_manager = [
+                    'id' => $value,
                     'name' => $request->input('full_name'),
                     'email' => $request->input('email'),
                     'role' => 'manager',
-                    'password' => bcrypt('pass@manager'),
-                    'id' => $value,
+                    'password' => bcrypt('pass@manager')
+                    
                 ];
-                $emp->store_manager($employees_under_manager, $select_manager, $value);
-            } else {
+                $user2->storeManager($select_manager); //save manager details in user table
+                $emp->storeEmployeesUnderManager($employees_under_manager,$value); //save employees under manager in employees table
+            } 
+            else //if employee is not manager
+            {
                 $select_emp = [
                     'id' => $value,
                     'name' => $request->input('full_name'),
@@ -99,7 +108,7 @@ class EmployeeController extends Controller
                     'role' => 'employee',
                     'password' => bcrypt('pass@employee'),
                 ];
-                $user2->store_employeee($select_emp);
+                $user2->storeEmployeee($select_emp);
             }
             $salary = new Salary();
             $salary_save = [
@@ -110,8 +119,7 @@ class EmployeeController extends Controller
                 'rent_allowance' => $request->input('rent_allowance'),
                 'gratuity' => $request->input('gratuity'),
             ];
-
-            $salary->store_salary($salary_save, $value);
+            $salary->storeSalary($salary_save, $value);
             DB::commit();
         } 
         catch (Exception $e) 
@@ -120,7 +128,7 @@ class EmployeeController extends Controller
             DB::rollback();
         }
 
-        // return redirect('/newhomepage')->with('success', 'created successfully');
+        return redirect('/newhomepage')->with('success', 'created successfully');
     }
     /**
      * Show the form for editing the specified resource.
@@ -130,13 +138,20 @@ class EmployeeController extends Controller
      */
     public function edit($id)
     {
+        try
+        {
         $emp1 = new Employee();
-        $emp = $emp1->find_id($id);
+        $emp = $emp1->findId($id);
         $sal = new Salary();
-        $salary = $sal->find_sid($emp);
+        $salary = $sal->findSid($emp);
         $user = new User();
-        $items = $user->find_managerlist();
+        $items = $user->findManagerList();
         return view('employees.edit', compact('emp', 'salary', 'items'));
+        }
+        catch(Exception $e)
+        {
+        error_log($e);
+        }
     }
     /**
      * Update the specified resource in storage.
@@ -150,9 +165,23 @@ class EmployeeController extends Controller
         $emp = new Employee();
         $salary = new Salary();
         $user = new User();
-
         try 
         {
+            $this->validate($request, [
+                'full_name' => 'required',
+                'email' => 'required',
+                'age' => 'required',
+                'gender' => 'required',
+                'phone_number' => 'required',
+                'address' => 'required',
+                'birth_date' => 'required',
+                'joining_date' => 'required',
+                'package' =>'required',
+                'gratuity' => 'required',
+                'variable_salary' => 'required',
+                'basic_pay' => 'required',
+                'rent_allowance'=>'required'
+            ]);
             DB::beginTransaction();
             $data = array(
                 'full_name' => $request->get('full_name'),
@@ -163,17 +192,15 @@ class EmployeeController extends Controller
                 'joining_date' => $request->get('joining_date'),
                 'm_id' => $request->get('m_id')
             );
-
             $mid = $request->get('mid');
+            $emp->updateEmployee($data, $id, $m_id);
 
-
-            $emp->update_employee($data, $id, $mid);
             $empdata = array(
                 'name' => $request->get('full_name'),
                 'email' => $request->get('email')
             );
-            $empid = $emp->find_empid($id);
-            $user->update_employee_in_user($empid, $data, $id); //update employee details in user table too
+            $empid = $emp->findEmpId($id);
+            $user->updateEmployeeInUser($empid, $data, $id); //update employee details in user table too
 
             $salary_data = array(
                 'package' => $request->get('package'),
@@ -181,18 +208,19 @@ class EmployeeController extends Controller
                 'variable_salary' => $request->get('variable_salary'),
                 'basic_pay' => $request->get('basic_pay'),
                 'rent_allowance' => $request->get('rent_allowance')
-            );
+            );  
 
-            $salary->update_salary($salary_data, $id);
+            $emp=$emp->findEmpId($id);
+            $salary->updateSalary($salary_data, $emp);
             DB::commit();
+            return redirect('/newhomepage')->with('success', 'created successfully');
         } 
         catch (Exception $e)
         {
             error_log(print_r($e));
             DB::rollback();
         }
-
-        return redirect('/newhomepage')->with('success', 'created successfully');
+        
     }
     /**
      * Remove the specified resource from storage.
@@ -207,9 +235,9 @@ class EmployeeController extends Controller
         {
             DB::beginTransaction();
             $emp = new Employee();
-            $emp->delete_employee($id);    //delete employee data from employee table   
+            $emp->deleteEmployee($id);    //delete employee data from employee table   
             $user = new User();
-            $user->delete_user($id); //delete employee data from user table 
+            $user->deleteUser($id); //delete employee data from user table 
             DB::commit();
         } 
         catch (Exception $e) 
