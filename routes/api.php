@@ -16,3 +16,9 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::resource('employees', 'API\EmployeeAPIController');
+Route::get('/searchId', 'API\EmployeeAPIController@searchById');
+Route::get('searchName', 'API\EmployeeAPIController@searchByName');
+Route::get('searchMail', 'API\EmployeeAPIController@searchByMail');
+Route::get('/sortJoin', 'API\EmployeeAPIController@sortByJoiningDate');
+Route::get('/chooseRole', 'API\EmployeeAPIController@selectRole');

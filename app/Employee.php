@@ -15,9 +15,47 @@ class Employee extends Model
     protected $table='employees';
     public function findId($id)
     { 
-        $emp = self::where('id', $id)->first(); 
-                    
+        $emp = self::where('id', $id)->first();                    
         return $emp;    
+    }
+
+    public function sortApi($joining_date_sort)
+    {       
+        if($joining_date_sort=="high_low")
+        {
+            $joining = self::orderBy('joining_date','DESC')->get();
+        }
+        else if($joining_date_sort=="low_high")
+        {      
+        $joining = self::orderBy('joining_date')->get();
+        }
+        else
+        $joining = self::orderBy('joining_date')->get();
+        return $joining; 
+    }
+    public function findApiId($find_api_id)
+    {
+        $find_id = self::where('emp_id',$find_api_id)->first();
+        return $find_id;
+    }
+    public function findApiName($find_api_name)
+    {
+        $find_name = self::where('full_name',$find_api_name)->first();
+        return $find_name;
+    }
+    public function findApiMail($find_api_mail)
+    {
+        $find_email = self::where('email',$find_api_mail)->first();
+        return $find_email;
+    }
+    public function findApiRole($find_api_role)
+    {      
+        $employees = Employee::leftJoin('users', 'employees.emp_id', '=', 'users.id')
+        ->select('employees.emp_id','employees.full_name')
+        ->where('users.role',$find_api_role)->get();
+         
+        //SELECT * FROM users LEFT JOIN employees on employees.emp_id=users.id where users.role='manager';
+        return $employees;
     }
     public function findEmpId($id)
     {
@@ -30,8 +68,6 @@ class Employee extends Model
             $update= self::whereIn('emp_id',$employees_under_manager)
             ->update(array('m_id' => $value));                        
     }
-
-   
     public function getEmployee()
     {
         $user1=self::get();       
