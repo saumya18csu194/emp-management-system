@@ -20,7 +20,14 @@ class Employee extends Model
     }
     public function getEmpRecords($page_number)
     {
-        
+        if($page_number<0 || $page_number==null)
+        {
+        $page_number=1;
+        }
+        else if(is_float($page_number))
+        {
+            $page_number=(int)($page_number);  //floor
+        }
         $get_emp_data = self::offset($page_number)->limit(10)->get();
         return $get_emp_data;
     }

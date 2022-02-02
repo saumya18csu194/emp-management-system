@@ -20,10 +20,17 @@ class EmployeeAPIController extends APIBaseController
 
     public function index(Request $request)
     {
+        try
+        {
         $employee=new Employee();
         $page_number=$request->input('page_number');
         $get_records=$employee->getEmpRecords($page_number);
         return $get_records;
+        }
+        catch(Exception $e)
+        {
+            error_log($e);
+        }
     }
     public function searchById(Request $request)
     {
@@ -44,7 +51,7 @@ class EmployeeAPIController extends APIBaseController
         } 
         catch (Exception $e)
         {
-            error_log($e);
+            error_log('something went wrong');
         }
     }
     public function sortByJoiningDate(Request $request)           //sorting by date employee joined company
@@ -64,7 +71,7 @@ class EmployeeAPIController extends APIBaseController
             return $this->sendResponse($get_results, ' retrieved successfully.');
         } 
         catch (Exception $e) {
-            error_log($e);
+            error_log('something went wrong');
         }
     }
     public function selectRole(Request $request)          //choose role:manager or employee 
@@ -85,7 +92,7 @@ class EmployeeAPIController extends APIBaseController
             }
         } 
         catch (Exception $e) {
-            error_log($e);
+            error_log('something went wrong');
         }
     }
     public function searchByName(Request $request)
@@ -107,7 +114,7 @@ class EmployeeAPIController extends APIBaseController
         } 
         catch (Excepton $e) 
         {
-            error_log($e);
+            error_log('something went wrong');
         }
     }
     public function searchByMail(Request $request)
@@ -129,7 +136,7 @@ class EmployeeAPIController extends APIBaseController
         } 
         catch (Exception $e) 
         {
-            error_log($e);
+            error_log('something went wrong');
         }
     }
     /**

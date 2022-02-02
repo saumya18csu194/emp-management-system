@@ -13,6 +13,8 @@ class APIBaseController extends Controller
             'success' => true,
             'data'    => $result,
             'message' => $message,
+            'count' =>count(array($result)),
+            
         ];
 
       
