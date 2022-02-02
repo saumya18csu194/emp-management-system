@@ -17,10 +17,19 @@ class EmployeeAPIController extends APIBaseController
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function index(Request $request)
+    {
+        $employee=new Employee();
+        $page_number=$request->input('page_number');
+        $get_records=$employee->getEmpRecords($page_number);
+        return $get_records;
+    }
     public function searchById(Request $request)
     {
         $emp = new Employee();
-        try {
+        try 
+        {
             $find_api_id = $request->input('find_api_id');
             $validator = Validator::make($request->all(), ['find_api_id' => 'required',]);
             if ($validator->fails()) {
@@ -32,13 +41,16 @@ class EmployeeAPIController extends APIBaseController
             } else {
                 return $this->sendResponse($get_results, ' retrieved successfully.');
             }
-        } catch (Exception $e) {
+        } 
+        catch (Exception $e)
+        {
             error_log($e);
         }
     }
     public function sortByJoiningDate(Request $request)           //sorting by date employee joined company
     {
-        try {
+        try
+        {
             $emp = new Employee();
             $joining_date_sort = $request->input('joining_date_sort');
             $validator = Validator::make($request->all(), ['joining_date_sort' => 'required',]);
@@ -50,14 +62,16 @@ class EmployeeAPIController extends APIBaseController
                 return $this->sendError('enter high_low or low_high,');
             }
             return $this->sendResponse($get_results, ' retrieved successfully.');
-        } catch (Exception $e) {
+        } 
+        catch (Exception $e) {
             error_log($e);
         }
     }
     public function selectRole(Request $request)          //choose role:manager or employee 
     {
         $emp = new Employee();
-        try {
+        try 
+        {
             $find_api_role = $request->input('find_api_role');
             $validator = Validator::make($request->all(), ['find_api_role' => 'required',]);
             if ($validator->fails()) {
@@ -69,14 +83,16 @@ class EmployeeAPIController extends APIBaseController
             } else {
                 return $this->sendResponse($get_results, ' retrieved successfully.');
             }
-        } catch (Exception $e) {
+        } 
+        catch (Exception $e) {
             error_log($e);
         }
     }
     public function searchByName(Request $request)
     {
         $emp = new Employee();
-        try {
+        try 
+        {
             $find_api_name = $request->input('find_api_name');
             $validator = Validator::make($request->all(), ['find_api_name' => 'required',]);
             if ($validator->fails()) {
@@ -88,13 +104,16 @@ class EmployeeAPIController extends APIBaseController
             } else {
                 return $this->sendResponse($get_results, ' retrieved successfully.');
             }
-        } catch (Excepton $e) {
+        } 
+        catch (Excepton $e) 
+        {
             error_log($e);
         }
     }
     public function searchByMail(Request $request)
     {
-        try {
+        try 
+        {
             $emp = new Employee();
             $find_api_mail = $request->input('find_api_mail');
             $validator = Validator::make($request->all(), ['find_api_mail' => 'required',]);
@@ -107,7 +126,9 @@ class EmployeeAPIController extends APIBaseController
             } else {
                 return $this->sendResponse($get_results, ' retrieved successfully.');
             }
-        } catch (Exception $e) {
+        } 
+        catch (Exception $e) 
+        {
             error_log($e);
         }
     }

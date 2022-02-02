@@ -18,7 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::resource('employees', 'API\EmployeeAPIController');
 Route::get('/searchId', 'API\EmployeeAPIController@searchById');
-Route::get('searchName', 'API\EmployeeAPIController@searchByName');
-Route::get('searchMail', 'API\EmployeeAPIController@searchByMail');
+Route::get('/searchName', 'API\EmployeeAPIController@searchByName');
+Route::get('/searchMail', 'API\EmployeeAPIController@searchByMail');
 Route::get('/sortJoin', 'API\EmployeeAPIController@sortByJoiningDate');
 Route::get('/chooseRole', 'API\EmployeeAPIController@selectRole');
+Route::get('/getRecords', 'API\EmployeeAPIController@index');
